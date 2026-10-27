@@ -5,6 +5,7 @@ import app.synth.city.domain.model.Tile
 import app.synth.city.domain.model.TileType
 
 class CityStatsCalculator {
+
     fun calculate(tiles: List<Tile>): CityStats {
         return CityStats(
             roads = tiles.count { it.type == TileType.ROAD },

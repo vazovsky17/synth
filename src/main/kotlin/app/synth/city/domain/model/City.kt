@@ -5,5 +5,6 @@ data class City(
     val seed: Long,
     val width: Int,
     val height: Int,
+    val stats: CityStats,
     val tiles: List<Tile>,
 )
