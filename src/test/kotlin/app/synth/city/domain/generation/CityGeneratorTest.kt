@@ -53,4 +53,33 @@ class CityGeneratorTest {
 
         assertEquals(10 * 8, tiles.size)
     }
+
+    @Test
+    fun `city center contains commercial buildings`() {
+        val tiles = CityGenerator.generate(
+            width = 10,
+            height = 10,
+            seed = 42L
+        )
+
+        val centerTile = tiles.first { it.x == 5 && it.y == 5 }
+
+        assertEquals(
+            TileType.COMMERCIAL,
+            centerTile.type
+        )
+    }
+
+    @Test
+    fun `roads have priority over commercial center`() {
+        val tiles = CityGenerator.generate(
+            width = 10,
+            height = 10,
+            seed = 42L
+        )
+
+        val tile = tiles.first { it.x == 4 && it.y == 5 }
+
+        assertEquals(TileType.ROAD, tile.type)
+    }
 }
