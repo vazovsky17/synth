@@ -1,0 +1,45 @@
+info:
+  name: CITY-01 · Create City
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/cities"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Vazie City",
+        "width": 10,
+        "height": 8,
+        "seed": 42
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (res.getStatus() === 201 && body.id != null) {
+          bru.setEnvVar("testCityId", body.id);
+        }
+    - type: tests
+      code: |-
+        test("201 · City created", () => {
+          expect(res.getStatus()).to.equal(201);
+        });
+
+        test("Response contains valid ID", () => {
+          const body = res.getBody();
+          expect(body.id).to.be.a("number");
+          expect(body.id).to.be.greaterThan(0);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

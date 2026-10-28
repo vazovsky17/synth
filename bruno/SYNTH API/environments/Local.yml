@@ -1,0 +1,8 @@
+name: Local
+variables:
+  - name: baseUrl
+    value: http://localhost:8080
+  - name: cityId
+    value: "1"
+  - name: missingCityId
+    value: "999999"

@@ -1,0 +1,44 @@
+info:
+  name: GEN-01 · Generate City
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/cities/generate?name=Synth City&width=10&height=8&seed=42"
+  params:
+    - name: name
+      value: Synth City
+      type: query
+    - name: width
+      value: "10"
+      type: query
+    - name: height
+      value: "8"
+      type: query
+    - name: seed
+      value: "42"
+      type: query
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("200 · City generated", () => {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Correct city dimensions and tiles", () => {
+          const city = res.getBody();
+          expect(city.width).to.equal(10);
+          expect(city.height).to.equal(8);
+          expect(city.tiles).to.have.lengthOf(80);
+          expect(city.stats.roads).to.be.greaterThan(0);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

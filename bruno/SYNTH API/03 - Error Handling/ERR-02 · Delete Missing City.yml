@@ -1,0 +1,31 @@
+info:
+  name: ERR-02 · Delete Missing City
+  type: http
+  seq: 2
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/v1/cities/{{missingCityId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("404 · Cannot delete missing city", () => {
+          expect(res.getStatus()).to.equal(404);
+        });
+
+        test("Correct missing city message", () => {
+          const body = res.getBody();
+          expect(body.error).to.equal("Not Found");
+          expect(body.message).to.equal(
+            "City with id 999999 not found"
+          );
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

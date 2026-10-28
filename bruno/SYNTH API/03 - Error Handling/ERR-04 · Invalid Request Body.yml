@@ -1,0 +1,33 @@
+info:
+  name: ERR-04 · Invalid Request Body
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/cities"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Broken City",
+        "width":
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("400 · Malformed JSON rejected", () => {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("Malformed JSON is not accepted", () => {
+          expect(res.getStatus()).to.not.equal(201);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

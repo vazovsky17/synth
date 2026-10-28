@@ -1,0 +1,36 @@
+info:
+  name: VAL-03 · Invalid Height
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/cities"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Invalid Height",
+        "width": 10,
+        "height": -1,
+        "seed": 42
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("400 · Invalid height rejected", () => {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("City was not created", () => {
+          expect(res.getStatus()).to.not.equal(201);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

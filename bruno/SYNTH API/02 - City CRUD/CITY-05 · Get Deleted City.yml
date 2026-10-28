@@ -1,0 +1,33 @@
+info:
+  name: CITY-05 · Get Deleted City
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/cities/{{testCityId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("404 · Deleted city not found", () => {
+          expect(res.getStatus()).to.equal(404);
+        });
+
+        test("Correct error response", () => {
+          const body = res.getBody();
+          const id = bru.getEnvVar("testCityId");
+
+          expect(body.error).to.equal("Not Found");
+          expect(body.message).to.equal(
+            `City with id ${id} not found`
+          );
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

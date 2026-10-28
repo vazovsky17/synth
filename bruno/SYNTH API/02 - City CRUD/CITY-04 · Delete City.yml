@@ -1,0 +1,31 @@
+info:
+  name: CITY-04 · Delete City
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/api/v1/cities/{{testCityId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("204 · City deleted", () => {
+          expect(res.getStatus()).to.equal(204);
+        });
+
+        test("Response body is empty", () => {
+          const body = res.getBody();
+
+          expect(
+            body == null || body === ""
+          ).to.equal(true);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

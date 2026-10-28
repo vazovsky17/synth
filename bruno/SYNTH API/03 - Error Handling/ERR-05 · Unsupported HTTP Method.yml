@@ -1,0 +1,27 @@
+info:
+  name: ERR-05 · Unsupported HTTP Method
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/v1/cities/{{cityId}}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("405 · Unsupported method rejected", () => {
+          expect(res.getStatus()).to.equal(405);
+        });
+
+        test("Unsupported method is not accepted", () => {
+          expect(res.getStatus()).to.not.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

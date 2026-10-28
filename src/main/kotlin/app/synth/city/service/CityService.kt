@@ -32,6 +32,10 @@ class CityService(
         }
     }
 
+    fun getAllCities(): List<CityResponse> {
+        return cityRepository.findAll().map(::toResponse)
+    }
+
     fun getCity(id: Long): CityResponse {
         val entity = cityRepository.findById(id)
             .orElseThrow {
@@ -39,6 +43,15 @@ class CityService(
             }
 
         return toResponse(entity)
+    }
+
+
+    fun deleteCity(id: Long) {
+        if (!cityRepository.existsById(id)) {
+            throw NoSuchElementException("City with id $id not found")
+        }
+
+        cityRepository.deleteById(id)
     }
 
     private fun toResponse(entity: CityEntity): CityResponse {

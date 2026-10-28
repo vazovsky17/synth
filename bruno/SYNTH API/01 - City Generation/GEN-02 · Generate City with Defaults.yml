@@ -1,0 +1,39 @@
+info:
+  name: GEN-02 · Generate City with Defaults
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/cities/generate?width=8&height=8&seed=123"
+  params:
+    - name: width
+      value: "8"
+      type: query
+    - name: height
+      value: "8"
+      type: query
+    - name: seed
+      value: "123"
+      type: query
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("200 · Default generation works", () => {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Default name and dimensions", () => {
+          const city = res.getBody();
+          expect(city.name).to.equal("Synth City");
+          expect(city.tiles).to.have.lengthOf(64);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

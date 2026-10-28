@@ -1,0 +1,36 @@
+info:
+  name: VAL-02 · Invalid Width
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/cities"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Invalid Width",
+        "width": 0,
+        "height": 8,
+        "seed": 42
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("400 · Invalid width rejected", () => {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("City was not created", () => {
+          expect(res.getStatus()).to.not.equal(201);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
