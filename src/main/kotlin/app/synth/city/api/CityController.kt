@@ -1,5 +1,6 @@
 package app.synth.city.api
 
+import app.synth.city.domain.LivingCityGenerator
 import app.synth.city.domain.generation.CityGenerationConfig
 import app.synth.city.domain.generation.CityGenerator
 import app.synth.city.domain.generation.CityStatsCalculator
@@ -28,6 +29,7 @@ class CityController(
 
     @GetMapping("/generate")
     fun generate(
+        @RequestParam(defaultValue = "v3") generator: String,
         @RequestParam(defaultValue = "Synth City") name: String,
         @RequestParam width: Int,
         @RequestParam height: Int,
@@ -43,7 +45,25 @@ class CityController(
             commercialRadius = commercialRadius
         )
 
-        val tiles = CityGenerator.generate(width, height, seed, config)
+        val tiles = when (generator.lowercase()) {
+            "v3" -> CityGenerator.generate(
+                width = width,
+                height = height,
+                seed = seed,
+                config = config
+            )
+
+            "v4" -> LivingCityGenerator.generate(
+                width = width,
+                height = height,
+                seed = seed,
+                config = config
+            )
+
+            else -> throw IllegalArgumentException(
+                "Unknown generator: $generator"
+            )
+        }
 
         return City(
             name = name,

@@ -34,6 +34,8 @@ async function loadCity() {
     const industrialZoneSize = Number(document.getElementById("industrialZoneSize").value);
     const commercialRadius = Number(document.getElementById("commercialRadius").value);
 
+    const generator = document.getElementById("generator").value;
+
     if (
         !Number.isInteger(width) || width < 1 || width > 100 ||
         !Number.isInteger(height) || height < 1 || height > 100 ||
@@ -52,7 +54,8 @@ async function loadCity() {
         seed: String(seed),
         roadSpacing: String(roadSpacing),
         industrialZoneSize: String(industrialZoneSize),
-        commercialRadius: String(commercialRadius)
+        commercialRadius: String(commercialRadius),
+        generator: String(generator),
     });
 
     const button = document.getElementById("generateButton");
