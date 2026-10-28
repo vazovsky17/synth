@@ -19,10 +19,13 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.springdoc.openapi)
+
     implementation(libs.spring.data.jpa)
     implementation(libs.spring.validation)
     implementation(libs.spring.webmvc)
     implementation(libs.spring.flyway)
+
     implementation(libs.kotlin.reflect)
     implementation(libs.jackson.kotlin)
 
