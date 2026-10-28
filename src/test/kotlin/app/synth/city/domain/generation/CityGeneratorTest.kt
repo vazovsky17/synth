@@ -1,4 +1,3 @@
-
 package app.synth.city.domain.generation
 
 import app.synth.city.domain.model.TileType
@@ -118,5 +117,53 @@ class CityGeneratorTest {
         assertThrows<IllegalArgumentException> {
             CityGenerator.generate(0, 10, 42L)
         }
+    }
+
+    // 6. Custom generation configuration
+
+    @Test
+    fun `custom road spacing changes road layout`() {
+        val config = CityGenerationConfig(roadSpacing = 6)
+
+        val tiles = CityGenerator.generate(12, 12, 42L, config)
+
+        val road = tiles.first { it.x == 6 && it.y == 7 }
+        val building = tiles.first { it.x == 4 && it.y == 7 }
+
+        assertEquals(TileType.ROAD, road.type)
+        assertNotEquals(TileType.ROAD, building.type)
+    }
+
+    @Test
+    fun `custom commercial radius expands city center`() {
+        val config = CityGenerationConfig(commercialRadius = 4)
+
+        val tiles = CityGenerator.generate(20, 20, 42L, config)
+
+        val tile = tiles.first { it.x == 11 && it.y == 13 }
+
+        assertEquals(TileType.COMMERCIAL, tile.type)
+    }
+
+    @Test
+    fun `larger industrial zone generates more industrial tiles`() {
+        val small = CityGenerator.generate(
+            width = 40,
+            height = 40,
+            seed = 42L,
+            config = CityGenerationConfig(industrialZoneSize = 10)
+        )
+
+        val large = CityGenerator.generate(
+            width = 40,
+            height = 40,
+            seed = 42L,
+            config = CityGenerationConfig(industrialZoneSize = 40)
+        )
+
+        val smallCount = small.count { it.type == TileType.INDUSTRIAL }
+        val largeCount = large.count { it.type == TileType.INDUSTRIAL }
+
+        assertTrue(largeCount > smallCount)
     }
 }

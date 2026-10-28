@@ -17,6 +17,16 @@ data class CreateCityRequest(
     @field:Min(1)
     @field:Max(100)
     val height: Int,
-    
-    val seed: Long
+
+    val seed: Long,
+
+    @field:Min(1)
+    val roadSpacing: Int = 4,
+
+    @field:Min(1)
+    @field:Max(50)
+    val industrialZoneSize: Int = 25,
+
+    @field:Min(0)
+    val commercialRadius: Int = 2
 )

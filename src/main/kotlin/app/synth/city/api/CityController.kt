@@ -1,5 +1,6 @@
 package app.synth.city.api
 
+import app.synth.city.domain.generation.CityGenerationConfig
 import app.synth.city.domain.generation.CityGenerator
 import app.synth.city.domain.generation.CityStatsCalculator
 import app.synth.city.domain.model.City
@@ -30,11 +31,19 @@ class CityController(
         @RequestParam(defaultValue = "Synth City") name: String,
         @RequestParam width: Int,
         @RequestParam height: Int,
-        @RequestParam seed: Long
+        @RequestParam seed: Long,
+        @RequestParam(defaultValue = "4") roadSpacing: Int,
+        @RequestParam(defaultValue = "25") industrialZoneSize: Int,
+        @RequestParam(defaultValue = "2") commercialRadius: Int
     ): City {
         val cityStatsCalculator = CityStatsCalculator()
+        val config = CityGenerationConfig(
+            roadSpacing = roadSpacing,
+            industrialZoneSize = industrialZoneSize,
+            commercialRadius = commercialRadius
+        )
 
-        val tiles = CityGenerator.generate(width, height, seed)
+        val tiles = CityGenerator.generate(width, height, seed, config)
 
         return City(
             name = name,
@@ -50,11 +59,18 @@ class CityController(
     fun createCity(
         @Valid @RequestBody request: CreateCityRequest
     ): ResponseEntity<Map<String, Long>> {
+        val config = CityGenerationConfig(
+            roadSpacing = request.roadSpacing,
+            industrialZoneSize = request.industrialZoneSize,
+            commercialRadius = request.commercialRadius
+        )
+
         val id = cityService.createCity(
             name = request.name,
             width = request.width,
             height = request.height,
-            seed = request.seed
+            seed = request.seed,
+            config = config
         )
 
         return ResponseEntity.status(HttpStatus.CREATED)

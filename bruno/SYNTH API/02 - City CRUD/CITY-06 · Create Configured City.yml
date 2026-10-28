@@ -1,0 +1,44 @@
+info:
+  name: CITY-06 · Create Configured City
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/v1/cities"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Vazie Metropolis",
+        "width": 30,
+        "height": 30,
+        "seed": 42,
+        "roadSpacing": 6,
+        "industrialZoneSize": 35,
+        "commercialRadius": 5
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.getStatus() === 201) {
+            bru.setEnvVar("configuredCityId", res.getBody().id);
+        }
+    - type: tests
+      code: |-
+        test("returns HTTP 201", function () {
+            expect(res.getStatus()).to.equal(201);
+        });
+
+        test("returns valid city ID", function () {
+            expect(res.getBody().id).to.be.greaterThan(0);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

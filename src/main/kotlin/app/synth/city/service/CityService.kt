@@ -1,5 +1,6 @@
 package app.synth.city.service
 
+import app.synth.city.domain.generation.CityGenerationConfig
 import app.synth.city.domain.generation.CityGenerator
 import app.synth.city.domain.model.Tile
 import app.synth.city.dto.CityResponse
@@ -14,8 +15,19 @@ class CityService(
     private val cityRepository: CityRepository,
     private val objectMapper: ObjectMapper
 ) {
-    fun createCity(name: String, width: Int, height: Int, seed: Long): Long {
-        val tiles = CityGenerator.generate(width, height, seed)
+    fun createCity(
+        name: String,
+        width: Int,
+        height: Int,
+        seed: Long,
+        config: CityGenerationConfig = CityGenerationConfig()
+    ): Long {
+        val tiles = CityGenerator.generate(
+            width = width,
+            height = height,
+            seed = seed,
+            config = config
+        )
         val tilesJson = objectMapper.writeValueAsString(tiles)
 
         val entity = CityEntity(
