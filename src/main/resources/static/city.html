@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNTH // City Viewer</title>
+    <link rel="stylesheet" href="/city.css">
+</head>
+
+<body>
+<header>
+    <h1>SYNTH // CITY VIEWER</h1>
+    <p>Procedural City Engine</p>
+</header>
+
+<main>
+    <div class="controls">
+        <label>
+            Width
+            <input id="cityWidth" type="number" value="30" min="1" max="100">
+        </label>
+
+        <label>
+            Height
+            <input id="cityHeight" type="number" value="20" min="1" max="100">
+        </label>
+
+        <label>
+            Seed
+            <input id="citySeed" type="number" value="42" step="1">
+        </label>
+
+        <label>
+            Road Spacing
+            <input id="roadSpacing" type="number" value="4" min="1" max="100">
+        </label>
+
+        <label>
+            Industrial Zone %
+            <input id="industrialZoneSize" type="number" value="25" min="1" max="50">
+        </label>
+
+        <label>
+            Commercial Radius
+            <input id="commercialRadius" type="number" value="2" min="0" max="100">
+        </label>
+
+        <button id="generateButton" type="button">
+            Generate City
+        </button>
+    </div>
+
+    <section class="stats" aria-label="City statistics">
+        <div>🛣️ Roads <strong id="roadsCount">0</strong></div>
+        <div>🏡 Residential <strong id="residentialCount">0</strong></div>
+        <div>🏬 Commercial <strong id="commercialCount">0</strong></div>
+        <div>🏭 Industrial <strong id="industrialCount">0</strong></div>
+    </section>
+
+    <div class="legend" aria-label="Map legend">
+        <span><i class="legend-road"></i> Roads</span>
+        <span><i class="legend-residential"></i> Residential</span>
+        <span><i class="legend-commercial"></i> Commercial</span>
+        <span><i class="legend-industrial"></i> Industrial</span>
+    </div>
+
+    <div class="map-container">
+        <canvas id="cityCanvas" width="800" height="600"></canvas>
+        <div id="tileInfo" class="tile-info">
+            Hover over a tile
+        </div>
+    </div>
+
+    <div class="map-toolbar">
+        <button id="resetViewButton" type="button">
+            Reset View
+        </button>
+        <span>Scroll to zoom · Drag to pan</span>
+    </div>
+
+</main>
+
+<script src="/city.js"></script>
+
+</body>
+</html>
