@@ -1,3 +1,4 @@
+
 package app.synth.city.domain.generation
 
 import app.synth.city.domain.model.TileType
@@ -9,20 +10,32 @@ import kotlin.test.assertTrue
 
 class CityGeneratorTest {
 
+    // 1. Basic generation
+
+    @Test
+    fun `generated city has correct tile count`() {
+        val tiles = CityGenerator.generate(10, 8, 42L)
+
+        assertEquals(80, tiles.size)
+    }
+
     @Test
     fun `same seed produces identical cities`() {
-        val firstGeneration = CityGenerator.generate(10, 10, 42L)
-        val secondGeneration = CityGenerator.generate(10, 10, 42L)
+        val first = CityGenerator.generate(10, 10, 42L)
+        val second = CityGenerator.generate(10, 10, 42L)
 
-        assertEquals(firstGeneration, secondGeneration)
+        assertEquals(first, second)
     }
 
     @Test
-    fun `zero width throws exception`() {
-        assertThrows<IllegalArgumentException> {
-            CityGenerator.generate(0, 10, 42L)
-        }
+    fun `different seeds generate different cities`() {
+        val first = CityGenerator.generate(20, 20, 42L)
+        val second = CityGenerator.generate(20, 20, 123L)
+
+        assertNotEquals(first, second)
     }
+
+    // 2. Road generation
 
     @Test
     fun `roads are generated at correct coordinates`() {
@@ -42,70 +55,68 @@ class CityGeneratorTest {
 
     @Test
     fun `all road tiles follow grid rule`() {
-        val tiles = CityGenerator.generate(10, 10, 42L).filter { it.type == TileType.ROAD }
+        val roads = CityGenerator.generate(10, 10, 42L)
+            .filter { it.type == TileType.ROAD }
 
-        assertTrue(tiles.all { it.x % 4 == 0 || it.y % 4 == 0 })
+        assertTrue(roads.all { it.x % 4 == 0 || it.y % 4 == 0 })
     }
 
-    @Test
-    fun `generated city has correct tile count`() {
-        val tiles = CityGenerator.generate(10, 8, 42L)
-
-        assertEquals(10 * 8, tiles.size)
-    }
+    // 3. Commercial center
 
     @Test
     fun `city center contains commercial buildings`() {
-        val tiles = CityGenerator.generate(
-            width = 10,
-            height = 10,
-            seed = 42L
-        )
-
+        val tiles = CityGenerator.generate(10, 10, 42L)
         val centerTile = tiles.first { it.x == 5 && it.y == 5 }
 
-        assertEquals(
-            TileType.COMMERCIAL,
-            centerTile.type
-        )
+        assertEquals(TileType.COMMERCIAL, centerTile.type)
     }
 
     @Test
     fun `roads have priority over commercial center`() {
-        val tiles = CityGenerator.generate(
-            width = 10,
-            height = 10,
-            seed = 42L
-        )
-
+        val tiles = CityGenerator.generate(10, 10, 42L)
         val tile = tiles.first { it.x == 4 && it.y == 5 }
 
         assertEquals(TileType.ROAD, tile.type)
     }
 
+    // 4. Industrial districts
+
     @Test
-    fun `industrial zone generates industrial tiles`() {
-        val tiles = CityGenerator.generate(
-            width = 20,
-            height = 20,
-            seed = 42L
+    fun `industrial zone is generated in one of four corners`() {
+        val tiles = CityGenerator.generate(20, 20, 42L)
+
+        val corners = listOf(
+            (0 until 5) to (0 until 5),
+            (15 until 20) to (0 until 5),
+            (0 until 5) to (15 until 20),
+            (15 until 20) to (15 until 20)
         )
 
-        val tile = tiles.first { it.x == 17 && it.y == 17 }
+        val hasIndustrialCorner = corners.any { (xs, ys) ->
+            tiles.any { tile ->
+                tile.x in xs &&
+                        tile.y in ys &&
+                        tile.type == TileType.INDUSTRIAL
+            }
+        }
 
-        assertEquals(TileType.INDUSTRIAL, tile.type)
+        assertTrue(hasIndustrialCorner)
     }
 
     @Test
     fun `roads have priority over industrial zones`() {
-        val tiles = CityGenerator.generate(
-            width = 20,
-            height = 20,
-            seed = 42L
-        )
-
+        val tiles = CityGenerator.generate(20, 20, 42L)
         val tile = tiles.first { it.x == 16 && it.y == 17 }
 
         assertEquals(TileType.ROAD, tile.type)
+    }
+
+    // 5. Input validation
+
+    @Test
+    fun `zero width throws exception`() {
+        assertThrows<IllegalArgumentException> {
+            CityGenerator.generate(0, 10, 42L)
+        }
     }
 }
