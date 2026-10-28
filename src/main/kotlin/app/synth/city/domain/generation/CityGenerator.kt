@@ -26,10 +26,14 @@ object CityGenerator {
                         kotlin.math.abs(y - centerY)
 
                 val isCityCenter = distance <= 2
+                val isIndustrialZone = x >= width * 3 / 4 && y >= height * 3 / 4
+
                 val type = when {
                     x % 4 == 0 || y % 4 == 0 -> TileType.ROAD
 
                     isCityCenter -> TileType.COMMERCIAL
+
+                    isIndustrialZone -> TileType.INDUSTRIAL
 
                     else -> TileType.entries
                         .filter { it != TileType.ROAD }

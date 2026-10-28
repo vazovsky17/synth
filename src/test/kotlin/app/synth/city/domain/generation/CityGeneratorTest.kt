@@ -82,4 +82,30 @@ class CityGeneratorTest {
 
         assertEquals(TileType.ROAD, tile.type)
     }
+
+    @Test
+    fun `industrial zone generates industrial tiles`() {
+        val tiles = CityGenerator.generate(
+            width = 20,
+            height = 20,
+            seed = 42L
+        )
+
+        val tile = tiles.first { it.x == 17 && it.y == 17 }
+
+        assertEquals(TileType.INDUSTRIAL, tile.type)
+    }
+
+    @Test
+    fun `roads have priority over industrial zones`() {
+        val tiles = CityGenerator.generate(
+            width = 20,
+            height = 20,
+            seed = 42L
+        )
+
+        val tile = tiles.first { it.x == 16 && it.y == 17 }
+
+        assertEquals(TileType.ROAD, tile.type)
+    }
 }
