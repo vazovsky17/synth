@@ -1,0 +1,9 @@
+CREATE TABLE cities (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    seed BIGINT NOT NULL,
+    width INTEGER NOT NULL,
+    height INTEGER NOT NULL,
+    tiles JSONB NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
