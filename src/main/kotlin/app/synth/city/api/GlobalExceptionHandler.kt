@@ -1,5 +1,6 @@
 package app.synth.city.api
 
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -15,5 +16,18 @@ class GlobalExceptionHandler {
         )
 
         return ResponseEntity.badRequest().body(response)
+    }
+
+    @ExceptionHandler(NoSuchElementException::class)
+    fun handleNotFound(
+        exception: NoSuchElementException
+    ): ResponseEntity<ApiErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(
+                ApiErrorResponse(
+                    error = "Not Found",
+                    message = exception.message ?: "Resource not found"
+                )
+            )
     }
 }

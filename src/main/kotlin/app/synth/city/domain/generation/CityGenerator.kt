@@ -4,7 +4,7 @@ import app.synth.city.domain.model.Tile
 import app.synth.city.domain.model.TileType
 import kotlin.random.Random
 
-class CityGenerator {
+object CityGenerator {
 
     fun generate(width: Int, height: Int, seed: Long): List<Tile> {
         require(width > 0) {
@@ -35,7 +35,6 @@ class CityGenerator {
                 )
             }
         }
-
 
         return tiles
     }
